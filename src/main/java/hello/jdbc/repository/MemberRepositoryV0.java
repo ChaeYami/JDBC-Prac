@@ -36,7 +36,6 @@ public class MemberRepositoryV0 {
             close(con, pstmt, null);
         }
 
-
     }
 
     private void close(Connection con, Statement stmt, ResultSet rs) {
