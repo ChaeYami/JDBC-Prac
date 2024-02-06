@@ -18,7 +18,7 @@ class MemberRepositoryV0Test {
     @Test
     void crud() throws SQLException {
         //save
-        Member member = new Member("memberV0", 10000);
+        Member member = new Member("memberV1", 10000);
         repository.save(member);
 
         //findById
@@ -35,5 +35,11 @@ class MemberRepositoryV0Test {
         repository.delete(member.getMemberId());
         assertThatThrownBy(() -> repository.findById(member.getMemberId()))
                 .isInstanceOf(NoSuchElementException.class);
+
+        /*
+         * 회원을 삭제한 다음 findById() 를 통해서 조회한다.
+         * 회원이 없기 때문에 NoSuchElementException 이 발생한다.
+         * assertThatThrownBy 는 해당 예외가 발생해야 검증에 성공한다.
+         */
     }
 }
