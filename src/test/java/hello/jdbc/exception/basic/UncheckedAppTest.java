@@ -19,6 +19,9 @@ public class UncheckedAppTest {
         Controller controller = new Controller();
         assertThatThrownBy(() -> controller.request()) .isInstanceOf(Exception.class);
     }
+
+    // 예외 포함과 스택 트레이스
+    // 로그를 출력할 때 마지막 파라미터에 예외를 넣어주면 로그에 스택 트레이스를 출력할 수 있다
     @Test
     void printEx() {
         Controller controller = new Controller();
@@ -26,7 +29,10 @@ public class UncheckedAppTest {
             controller.request();
         } catch (Exception e) {
             //e.printStackTrace();
-            log.info("ex", e); }
+            log.info("ex", e);
+            /*마지막에 ex 를 전달 - 스택 트레이스에 로그를 출력
+            지금 예에서는 파라미터가 없기 때문에, 예외만 파라미터에 전달하면 스택 트레이스를 로그에 출력할 수 있다.*/
+        }
     }
     static class Controller {
         Service service = new Service();
@@ -52,7 +58,7 @@ public class UncheckedAppTest {
             try {
                 runSQL();
             } catch (SQLException e) {
-                throw new RuntimeSQLException(e);
+                throw new RuntimeSQLException(e); //기존 예외(e) 포함
             }
         }
         private void runSQL() throws SQLException {
