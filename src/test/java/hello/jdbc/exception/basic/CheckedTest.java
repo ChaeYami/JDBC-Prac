@@ -24,6 +24,8 @@ public class CheckedTest {
      */
     static class MyCheckedException extends Exception {
         public MyCheckedException(String message) {
+
+            // 에러 메세지 보관
             super(message);
         }
     }
