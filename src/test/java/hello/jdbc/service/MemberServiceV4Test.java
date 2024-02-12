@@ -27,7 +27,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @Slf4j
 @SpringBootTest
-class MemberServiceV4Test { public static final String MEMBER_A = "memberA";
+class MemberServiceV4Test {
+    public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
     public static final String MEMBER_EX = "ex";
     @Autowired
@@ -40,16 +41,19 @@ class MemberServiceV4Test { public static final String MEMBER_A = "memberA";
         memberRepository.delete(MEMBER_B);
         memberRepository.delete(MEMBER_EX);
     }
+
     @TestConfiguration
     static class TestConfig {
         private final DataSource dataSource;
         public TestConfig(DataSource dataSource) {
             this.dataSource = dataSource;
         }
+
         @Bean
         MemberRepository memberRepository() {
             return new MemberRepositoryV4_1(dataSource); //단순 예외 변환
         }
+
         @Bean
         MemberServiceV4 memberServiceV4() {
             return new MemberServiceV4(memberRepository());
@@ -61,7 +65,9 @@ class MemberServiceV4Test { public static final String MEMBER_A = "memberA";
         log.info("memberRepository class={}", memberRepository.getClass());
         assertThat(AopUtils.isAopProxy(memberService)).isTrue();
         assertThat(AopUtils.isAopProxy(memberRepository)).isFalse();
-    } @Test
+    }
+
+    @Test
     @DisplayName("정상 이체")
     void accountTransfer() {
         //given
@@ -69,15 +75,18 @@ class MemberServiceV4Test { public static final String MEMBER_A = "memberA";
         Member memberB = new Member(MEMBER_B, 10000);
         memberRepository.save(memberA);
         memberRepository.save(memberB);
+
         //when
         memberService.accountTransfer(memberA.getMemberId(),
                 memberB.getMemberId(), 2000);
+
         //then
         Member findMemberA = memberRepository.findById(memberA.getMemberId());
         Member findMemberB = memberRepository.findById(memberB.getMemberId());
         assertThat(findMemberA.getMoney()).isEqualTo(8000);
         assertThat(findMemberB.getMoney()).isEqualTo(12000);
     }
+
     @Test
     @DisplayName("이체중 예외 발생")
     void accountTransferEx() {
@@ -86,15 +95,18 @@ class MemberServiceV4Test { public static final String MEMBER_A = "memberA";
         Member memberEx = new Member(MEMBER_EX, 10000);
         memberRepository.save(memberA);
         memberRepository.save(memberEx);
+
         //when
         assertThatThrownBy(() ->
                 memberService.accountTransfer(memberA.getMemberId(), memberEx.getMemberId(),
                         2000))
                 .isInstanceOf(IllegalStateException.class);
+
         //then
         Member findMemberA = memberRepository.findById(memberA.getMemberId());
         Member findMemberEx = memberRepository.findById(memberEx.getMemberId());
         //memberA의 돈이 롤백 되어야함
         assertThat(findMemberA.getMoney()).isEqualTo(10000);
-        assertThat(findMemberEx.getMoney()).isEqualTo(10000); }
+        assertThat(findMemberEx.getMoney()).isEqualTo(10000);
+    }
 }
