@@ -1,6 +1,7 @@
 package hello.jdbc.exception.basic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
@@ -67,8 +68,9 @@ public class UncheckedAppTest {
     }
     static class RuntimeConnectException extends RuntimeException {
         public RuntimeConnectException(String message) {
-        super(message);
-    }
+
+            super(message);
+        }
     }
     static class RuntimeSQLException extends RuntimeException {
         public RuntimeSQLException() {
